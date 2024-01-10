@@ -1,11 +1,16 @@
-import './App.css';
-import WeatherApp from './weather';
+import {BrowserRouter,Routes,Route} from "react-router-dom"
+import React from "react";
+import WeatherApp from "./weather";
+import "./App.css";
+
 
 function App() {
   return (
-    <div>
-      <WeatherApp/>
-    </div>
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<WeatherApp/>}/>
+    </Routes>
+    </BrowserRouter>
   );
 }
 

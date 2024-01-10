@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./weather.css";
 
 function WeatherApp() {
   const [search, setSearch] = useState("london");

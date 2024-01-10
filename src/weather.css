@@ -1,0 +1,30 @@
+.weather-content{
+    padding:4px 0px;
+}
+.search{
+    padding:0.7rem 0.75rem;
+}
+
+@media (min-width:992px) and (max-width:1199px){
+    .weather-content{
+        padding:48px 0px;
+    }
+}
+@media (min-width:768px) and (max-width:991px){
+    .col-md-4{
+        width:41.333333% !important;
+    }
+    .weather-content{
+        padding: 62px 0px;
+    }
+}
+@media (min-width:576px) and (max-width:767px){
+    .weather-content{
+        padding:139px 0px;
+    }
+}
+@media (max-width:575px){
+    .weather-content{
+        padding:139px 13px;
+    }
+}
