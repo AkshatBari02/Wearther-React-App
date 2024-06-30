@@ -5,22 +5,81 @@ function WeatherApp() {
   const [search, setSearch] = useState("london");
   const [data, setData] = useState([]);
   const [input, setInput] = useState("");
+  const [image, setImage] = useState("");
   let componentMounted = true;
+
+  const weatherImages = {
+    Clouds: [
+      "https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?q=100&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      
+      "https://images.unsplash.com/photo-1548266652-99cf27701ced?q=100&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      
+      "https://images.unsplash.com/photo-1560837616-fee1f3d8753a?q=100&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
+    Thunderstorm: [
+      "https://images.unsplash.com/photo-1590767600885-427b16643a8d?q=80&w=1530&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      
+      "https://images.unsplash.com/photo-1656882434076-103a0ff5e9e1?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      
+      "https://images.unsplash.com/photo-1686407449898-79cd2d0eba4b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
+    Drizzle: [
+      "https://images.unsplash.com/photo-1516912481808-3406841bd33c?q=80&w=1488&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+
+      "https://images.unsplash.com/photo-1492011221367-f47e3ccd77a0?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      
+      "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
+    Rain: [
+      "https://images.unsplash.com/photo-1635823288719-93f2c8ac7f3f?q=80&w=1527&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      
+      "https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      
+      "https://images.unsplash.com/photo-1501297875943-27f3803b4956?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
+    Snow: [
+      "https://plus.unsplash.com/premium_photo-1706625699202-b559d88f579f?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      
+      "https://images.unsplash.com/photo-1709134519538-b5a228a3bb89?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      
+      "https://images.unsplash.com/photo-1706122816484-b64122987366?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
+  };
 
   useEffect(() => {
     const fetchWeather = async () => {
-      const apiKey=process.env.REACT_APP_API_KEY;
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=${apiKey}`
+      const weatherApiKey = process.env.REACT_APP_API_KEY;
+
+      const weatherResponse = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=${weatherApiKey}`
       );
-      if (componentMounted) {
-        setData(await response.json());
+
+      if (weatherResponse.ok) {
+        const weatherData = await weatherResponse.json();
+        if (componentMounted) {
+          setData(weatherData);
+        }
+
+        const weatherCondition = weatherData.weather[0].main;
+        if (weatherImages[weatherCondition]) {
+          const imagesArray = weatherImages[weatherCondition];
+          const randomImage = imagesArray[Math.floor(Math.random() * imagesArray.length)];
+          if (componentMounted) {
+            setImage(randomImage);
+          }
+        } else {
+          setImage("https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?q=100&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+        }
+      } else {
+        console.error('Error fetching weather data:', weatherResponse.status);
       }
-      return () => {
-        componentMounted = false;
-      };
     };
+
     fetchWeather();
+
+    return () => {
+      componentMounted = false;
+    };
   }, [search]);
 
   let emoji = null;
@@ -64,21 +123,21 @@ function WeatherApp() {
 
   return (
     <>
-      <div className="container mt-0 weather-content" style={{}}>
+      <div className="container mt-0 weather-content">
         <div className="row justify-content-center">
           <div className="col-md-4">
-            <div class="card text-white text-center border-0">
+            <div className="card text-white text-center border-0">
               <img
-                class="card-img"
-                src={`https://source.unsplash.com/600x900/?${data.weather[0].main}`}
+                className="card-img card-bg"
+                src={image}
                 alt="Card"
               />
-              <div class="card-img-overlay">
+              <div className="card-img-overlay">
                 <form onSubmit={handleSubmit}>
-                  <div class="input-group mb-4 w-75 mx-auto">
+                  <div className="input-group mb-4 w-75 mx-auto">
                     <input
                       type="search"
-                      class="form-control"
+                      className="form-control"
                       placeholder="Search City"
                       aria-label="Search City"
                       aria-describedby="basic-addon2"
@@ -87,10 +146,10 @@ function WeatherApp() {
                       onChange={(e) => setInput(e.target.value)}
                       required
                     />
-                    <div class="input-group-append">
+                    <div className="input-group-append">
                       <button
                         type="submit"
-                        class="input-group-text search"
+                        className="input-group-text search"
                         id="basic-addon2"
                       >
                         <i className="fas fa-search"></i>
@@ -99,8 +158,8 @@ function WeatherApp() {
                   </div>
                 </form>
                 <div className="bg-dark bg-opacity-50 py-3">
-                  <h5 class="card-title">{data.name}</h5>
-                  <p class="card-text lead">
+                  <h5 className="card-title">{data.name}</h5>
+                  <p className="card-text lead">
                     {day}, {month} {date}, {year}
                     <br />
                     {time}

@@ -2,9 +2,8 @@
     padding:55px 0px;
 }
 .search{
-    padding:0.7rem 0.75rem;
+    padding:0.7rem 0.75rem !important;
 }
-
 @media (min-width:992px) and (max-width:1199px){
     .weather-content{
         padding:48px 0px;
